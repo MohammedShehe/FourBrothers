@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+<title>Four Brothers · Fuoni Kisimani, Zanzibar</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,600&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#faf7f0;
+    --sand:#d9d0c0;
+    --brass:#8b7a5f;
+    --ink:#1e1e2a;
+    --deep:#1e2b2b;
+    --teal:#2a3b3b;
+    --panel-count:6;
+    --story-accent: var(--brass);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.playfair{ font-family:'Playfair Display',serif; }
+  a{ color:inherit; }
+  ::-webkit-scrollbar{ width:6px; }
+  ::-webkit-scrollbar-track{ background:var(--sand); }
+  ::-webkit-scrollbar-thumb{ background:var(--brass); border-radius:8px; }
+  :focus-visible{ outline:2px solid var(--brass); outline-offset:3px; }
+
+  .wrap{ max-width:1100px; margin:0 auto; padding:0 1.75rem; }
+
+  /* ---------------- HERO ---------------- */
+  #hero{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:linear-gradient(155deg,var(--sand) 0%,#c1b4a0 100%);
+    position:relative;
+  }
+  #hero .badge-mark{
+    display:inline-block;
+    padding:.7rem 2.2rem;
+    border-radius:60px;
+    border:1px solid rgba(255,255,240,.6);
+    background:rgba(255,248,235,.45);
+    letter-spacing:5px;
+    font-weight:600;
+    color:var(--deep);
+    margin-bottom:1.75rem;
+  }
+  #hero h1{ font-size:clamp(2.2rem,5vw,3.6rem); font-weight:700; color:var(--deep); }
+  #hero p.lede{ font-size:1.15rem; max-width:520px; margin:1rem auto 0; opacity:.75; }
+  #hero .meta-row{ display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center; margin-top:2.5rem; }
+  #hero .meta-pill{
+    font-size:.85rem; padding:.5rem 1.1rem; border-radius:40px;
+    background:rgba(30,43,43,.08); color:var(--deep);
+  }
+  #hero .scroll-cue{ margin-top:3rem; font-size:.85rem; opacity:.55; display:flex; flex-direction:column; align-items:center; gap:.4rem; }
+  #hero .scroll-cue .line{ width:1px; height:34px; background:var(--deep); opacity:.4; animation:cue 1.8s ease-in-out infinite; }
+  @keyframes cue{ 0%,100%{ transform:scaleY(.4); opacity:.2; } 50%{ transform:scaleY(1); opacity:.6; } }
+
+  /* ---------------- STORY (pinned scrollytelling) ---------------- */
+  #story-wrap{ position:relative; background:var(--cream); }
+  @media (min-width:769px){
+    #story-wrap{ height:calc(var(--panel-count) * 100vh); }
+  }
+  .story-pin{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+    transition:background-color .6s ease;
+  }
+  .story-pin .wrap{ width:100%; display:flex; gap:3rem; align-items:center; }
+
+  /* left progress rail */
+  .story-rail{
+    flex:0 0 46px;
+    display:flex;
+    flex-direction:column;
+    gap:1.1rem;
+    align-items:center;
+  }
+  .story-rail button{
+    width:9px; height:9px; border-radius:50%;
+    background:rgba(30,43,43,.25);
+    border:none; padding:0; cursor:pointer;
+    transition:background .3s ease, transform .3s ease;
+  }
+  .story-rail button.is-active{ background:var(--deep); transform:scale(1.6); }
+  .story-rail .rail-count{
+    font-size:.72rem; letter-spacing:1px; color:var(--deep); opacity:.55;
+    writing-mode:vertical-rl; margin-top:.5rem;
+  }
+
+  /* panels */
+  .story-panels{ position:relative; flex:1; min-height:52vh; }
+  .story-panel{
+    display:flex; align-items:center; gap:2.5rem;
+  }
+  @media (min-width:769px){
+    .story-panel{ position:absolute; inset:0; opacity:0; pointer-events:none; }
+    .story-panel.is-active{ opacity:1; pointer-events:auto; }
+  }
+  .story-panel .chapter-num{
+    font-size:clamp(4rem,11vw,8rem);
+    font-weight:700;
+    color:var(--story-accent);
+    opacity:.28;
+    line-height:1;
+    flex:0 0 auto;
+    user-select:none;
+  }
+  .story-panel .chapter-icon{
+    font-size:2.2rem;
+    color:var(--brass);
+    margin-bottom:.6rem;
+    display:block;
+  }
+  .story-panel .kicker{
+    font-size:.8rem; letter-spacing:1.5px; color:var(--brass); font-weight:600;
+  }
+  .story-panel h2{ font-size:clamp(1.7rem,3.4vw,2.6rem); color:var(--deep); margin:.35rem 0 .5rem; }
+  .story-panel .role-line{ font-size:1.1rem; font-weight:500; color:var(--ink); }
+  .story-panel .meta-line{ font-size:.9rem; opacity:.6; margin-top:.15rem; }
+  .story-panel .story-link{
+    display:inline-flex; align-items:center; gap:.4rem;
+    margin-top:1.1rem; font-weight:500; font-size:.95rem;
+    text-decoration:none; color:var(--deep);
+    border-bottom:1px solid var(--brass); padding-bottom:2px;
+  }
+  .story-panel .story-link:hover{ color:var(--brass); }
+
+  /* mobile: plain stacked reveal, no pin */
+  @media (max-width:768px){
+    #story-wrap{ padding:3rem 0; }
+    .story-pin{ min-height:auto; }
+    .story-pin .wrap{ flex-direction:column; align-items:flex-start; }
+    .story-rail{ display:none; }
+    .story-panel{
+      opacity:0; transform:translateY(30px);
+      margin-bottom:3.5rem;
+      flex-direction:column; align-items:flex-start; gap:.9rem;
+    }
+    .story-panel.is-visible{ opacity:1; transform:translateY(0); transition:opacity .7s ease, transform .7s ease; }
+    .story-panel .chapter-num{ font-size:3.2rem; }
+  }
+
+  /* ---------------- SERVICE BANNER ---------------- */
+  #service-banner{
+    background:var(--sand);
+    padding:2.75rem 0;
+  }
+  #service-banner .band{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    gap:.9rem; text-align:center; color:var(--deep);
+  }
+  #service-banner .band a{ text-decoration:none; font-weight:600; border-bottom:1px dashed var(--brass); }
+  #service-banner .band a:hover{ border-bottom-color:var(--deep); }
+  #service-banner .sep{ opacity:.4; }
+
+  /* ---------------- FOOTER ---------------- */
+  footer{
+    background:var(--teal); color:#efe8dc;
+    padding:5rem 0 3rem; text-align:center;
+  }
+  footer p.playfair{ font-size:1.6rem; margin-bottom:.6rem; }
+  footer .addr{ opacity:.75; margin-bottom:1.5rem; }
+  footer .links a{ margin:0 .7rem; text-decoration:none; color:#efe8dc; opacity:.75; font-size:.9rem; }
+  footer .links a:hover{ opacity:1; }
+  footer .fine{ margin-top:2rem; font-size:.78rem; opacity:.45; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .story-panel{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrap">
+    <span class="badge-mark">FOUR BROTHERS</span>
+    <h1>Since 2003 · Zanzibar</h1>
+    <p class="lede">A story of unity, legacy, and the bonds that shape us.</p>
+    <div class="meta-row">
+      <span class="meta-pill"><i class="bi bi-geo-alt me-1"></i>Fuoni Kisimani</span>
+      <span class="meta-pill"><i class="bi bi-telephone me-1"></i>+255 774 040 506</span>
+      <span class="meta-pill"><i class="bi bi-envelope me-1"></i>molittle1011@gmail.com</span>
+    </div>
+    <div class="scroll-cue"><span>the family, one chapter at a time</span><span class="line"></span></div>
+  </div>
+</section>
+
+<!-- STORY : pinned scrollytelling -->
+<section id="story-wrap">
+  <div class="story-pin">
+    <div class="wrap">
+      <div class="story-rail" role="tablist" aria-label="Family chapters">
+        <button data-index="0" class="is-active" aria-label="Aminu Shehe Juma"></button>
+        <button data-index="1" aria-label="Fahima Mohamed Issa"></button>
+        <button data-index="2" aria-label="Abdulrahman"></button>
+        <button data-index="3" aria-label="Mohammed"></button>
+        <button data-index="4" aria-label="Abdulwarith"></button>
+        <button data-index="5" aria-label="Mundhir"></button>
+        <span class="rail-count">01 — 06</span>
+      </div>
+
+      <div class="story-panels">
+        <article class="story-panel is-active" data-accent="#8b7a5f" data-panel="0">
+          <span class="chapter-num">01</span>
+          <div>
+            <i class="bi bi-bar-chart-line chapter-icon"></i>
+            <span class="kicker">FATHER · ID F-001</span>
+            <h2>Aminu Shehe Juma</h2>
+            <p class="role-line">Policeman, 1993 – present</p>
+            <p class="meta-line">Age 53 · Zanzibar</p>
+          </div>
+        </article>
+
+        <article class="story-panel" data-accent="#a99a7c" data-panel="1">
+          <span class="chapter-num">02</span>
+          <div>
+            <i class="bi bi-heart chapter-icon"></i>
+            <span class="kicker">MOTHER · ID M-002</span>
+            <h2>Fahima Mohamed Issa</h2>
+            <p class="role-line">Statistician, 2003 - present</p>
+            <p class="meta-line">Family pillar · Zanzibar</p>
+          </div>
+        </article>
+
+        <article class="story-panel" data-accent="#6f8b7f" data-panel="2">
+          <span class="chapter-num">03</span>
+          <div>
+            <i class="bi bi-hospital chapter-icon"></i>
+            <span class="kicker">BROTHER · ID B-101</span>
+            <h2>Abdulrahman</h2>
+            <p class="role-line">Doctor, 2026 – present</p>
+            <p class="meta-line">Age 24</p>
+            <a class="story-link" href="https://docman.fourbrothers.online" target="_blank" rel="noopener">docman.fourbrothers.online <i class="bi bi-box-arrow-up-right"></i></a>
+          </div>
+        </article>
+
+        <article class="story-panel" data-accent="#7c8b8b" data-panel="3">
+          <span class="chapter-num">04</span>
+          <div>
+            <i class="bi bi-code-slash chapter-icon"></i>
+            <span class="kicker">BROTHER · ID B-102</span>
+            <h2>Mohammed</h2>
+            <p class="role-line">Software Engineer, 2026 – present</p>
+            <p class="meta-line">Age 21</p>
+            <a class="story-link" href="https://molittle.fourbrothers.online" target="_blank" rel="noopener">molittle.fourbrothers.online <i class="bi bi-box-arrow-up-right"></i></a>
+          </div>
+        </article>
+
+        <article class="story-panel" data-accent="#bfa876" data-panel="4">
+          <span class="chapter-num">05</span>
+          <div>
+            <i class="bi bi-book chapter-icon"></i>
+            <span class="kicker">BROTHER · ID B-103</span>
+            <h2>Abdulwarith</h2>
+            <p class="role-line">9th Class, student</p>
+            <p class="meta-line">Age 16</p>
+            <a class="story-link" href="https://kjr.fourbrothers.online" target="_blank" rel="noopener">kjr.fourbrothers.online <i class="bi bi-box-arrow-up-right"></i></a>
+          </div>
+        </article>
+
+        <article class="story-panel" data-accent="#8b7a5f" data-panel="5">
+          <span class="chapter-num">06</span>
+          <div>
+            <i class="bi bi-chat-dots chapter-icon"></i>
+            <span class="kicker">BROTHER · ID B-104</span>
+            <h2>Mundhir</h2>
+            <p class="role-line">Family Advisor</p>
+            <p class="meta-line">Age 15</p>
+            <a class="story-link" href="https://kinjili.fourbrothers.online" target="_blank" rel="noopener">kinjili.fourbrothers.online <i class="bi bi-box-arrow-up-right"></i></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE BANNER -->
+<section id="service-banner">
+  <div class="wrap band">
+    <i class="bi bi-joystick fs-4"></i>
+    <span>Family service:</span>
+    <a href="https://gamenest.fourbrothers.online" target="_blank" rel="noopener">GameNest · fourbrothers.online</a>
+    <span class="sep">|</span>
+    <i class="bi bi-instagram"></i>
+    <a href="https://www.instagram.com/mo_little11?igsi=MTZsdWhpeXg5ZGttYQ%3D%3D&utm_source=qr" target="_blank" rel="noopener">@mo_little11</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <p class="playfair">"Four brothers, one story."</p>
+    <p class="addr">Fuoni Kisimani, Zanzibar · Tanzania</p>
+    <div class="links">
+      <a href="tel:+255774040506"><i class="bi bi-telephone me-1"></i>+255 774 040 506</a>
+      <a href="mailto:molittle1011@gmail.com"><i class="bi bi-envelope me-1"></i>molittle1011@gmail.com</a>
+      <a href="https://www.instagram.com/mo_little11?igsi=MTZsdWhpeXg5ZGttYQ%3D%3D&utm_source=qr" target="_blank" rel="noopener"><i class="bi bi-instagram me-1"></i>Instagram</a>
+    </div>
+    <div class="fine"><i class="bi bi-c-circle"></i> 2026 Four Brothers</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  gsap.registerPlugin(ScrollTrigger);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- hero: single orchestrated entrance ----
+  gsap.from('#hero .wrap > *', {
+    opacity:0, y:34, duration:1, stagger:0.08, ease:'power2.out'
+  });
+
+  const panels = gsap.utils.toArray('.story-panel');
+  const railBtns = gsap.utils.toArray('.story-rail button');
+  const storyPin = document.querySelector('.story-pin');
+
+  function goToPanel(index, animate) {
+    panels.forEach((p, i) => p.classList.toggle('is-active', i === index));
+    railBtns.forEach((b, i) => b.classList.toggle('is-active', i === index));
+    const accent = panels[index].dataset.accent;
+    if (animate && !reduceMotion) {
+      gsap.to(storyPin, { backgroundColor: hexToRgba(accent, 0.09), duration:0.5, ease:'power1.out' });
+      gsap.fromTo(panels[index], { y: 24 }, { y: 0, duration:0.5, ease:'power2.out' });
+    } else {
+      storyPin.style.backgroundColor = hexToRgba(accent, 0.09);
+    }
+  }
+  function hexToRgba(hex, a) {
+    const v = hex.replace('#','');
+    const r = parseInt(v.substring(0,2),16), g = parseInt(v.substring(2,4),16), b = parseInt(v.substring(4,6),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  railBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.index, 10);
+      if (window.matchMedia('(min-width:769px)').matches) {
+        const st = ScrollTrigger.getById('story-scroller');
+        if (st) {
+          const target = st.start + (idx / panels.length) * (st.end - st.start) + 4;
+          window.scrollTo({ top: target, behavior:'smooth' });
+        }
+      } else {
+        panels[idx].scrollIntoView({ behavior:'smooth', block:'center' });
+      }
+    });
+  });
+
+  let mm = gsap.matchMedia();
+
+  // ---- Desktop / tablet: true pinned, scroll-scrubbed chapters ----
+  mm.add('(min-width: 769px)', () => {
+    let current = 0;
+    goToPanel(0, false);
+
+    ScrollTrigger.create({
+      id: 'story-scroller',
+      trigger: '#story-wrap',
+      start: 'top top',
+      end: 'bottom bottom',
+      pin: '.story-pin',
+      pinSpacing: true,
+      scrub: true,
+      onUpdate: (self) => {
+        const idx = Math.min(panels.length - 1, Math.floor(self.progress * panels.length));
+        if (idx !== current) {
+          current = idx;
+          goToPanel(current, true);
+        }
+      }
+    });
+
+    return () => { current = 0; };
+  });
+
+  // ---- Mobile: plain stacked reveal-on-scroll, no pinning ----
+  mm.add('(max-width: 768px)', () => {
+    panels.forEach((panel) => {
+      ScrollTrigger.create({
+        trigger: panel,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => panel.classList.add('is-visible')
+      });
+      const accent = panel.dataset.accent;
+      ScrollTrigger.create({
+        trigger: panel,
+        start: 'top 60%',
+        end: 'bottom 40%',
+        onToggle: (self) => {
+          if (self.isActive) storyPin.style.backgroundColor = hexToRgba(accent, 0.07);
+        }
+      });
+    });
+  });
+
+  // ---- footer / banner: single quiet entrance each ----
+  gsap.from('#service-banner .band > *', {
+    opacity:0, y:16, duration:0.7, stagger:0.05, ease:'power2.out',
+    scrollTrigger: { trigger:'#service-banner', start:'top 88%', once:true }
+  });
+  gsap.from('footer .wrap > *', {
+    opacity:0, y:20, duration:0.8, stagger:0.06, ease:'power2.out',
+    scrollTrigger: { trigger:'footer', start:'top 90%', once:true }
+  });
+
+  window.addEventListener('resize', () => ScrollTrigger.refresh());
+});
+</script>
+</body>
+</html>
